@@ -17,12 +17,17 @@ var SimpleSESAdapter = sesOptions => {
       to: mail.to,
       from: sesOptions.fromAddress,
       subject: mail.subject,
-      message: mail.text,
     };
+
+    if (sesOptions.format === 'text') {
+      data.altText = mail.text;
+    } else {
+      data.message = mail.text;
+    }
 
     return new Promise((resolve, reject) => {
       client.sendEmail(data, function(err, body, res) {
-        if (err) {
+        if (typeof err !== 'undefined' && err) {
           console.log(err);
         }
         resolve(body);
